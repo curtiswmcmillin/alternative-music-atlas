@@ -303,23 +303,25 @@ function applyHash() {
 
   const view = prefix === "era" ? "eras" : prefix === "sg" ? "subgenres" : null;
 
-  if (!view) {
-    setHash("eras");  // empty or unknown — normalize; hashchange re-enters
-    return;
-  }
-
-  state.view = view;
-
-  if (id) {
-    const found = view === "eras" ? findEra(id) : findSubGenre(id);
-    if (found) {
-      if (view === "eras") state.selectedEraId = id;
-      else state.selectedSubGenreId = id;
-      state.route = "detail";
+  if (view) {
+    state.view = view;
+    if (id) {
+      const found = view === "eras" ? findEra(id) : findSubGenre(id);
+      if (found) {
+        if (view === "eras") state.selectedEraId = id;
+        else state.selectedSubGenreId = id;
+        state.route = "detail";
+      } else {
+        state.route = "list";  // id not found — just show the list
+      }
     } else {
-      state.route = "list";  // id not found — just show the list
+      state.route = "list";
     }
   } else {
+    // empty hash → stay clean; unknown hash → quietly scrub it (no history entry)
+    if (location.hash) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
     state.route = "list";
   }
   render();
