@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Nudge browsers toward revalidating the HTML itself. These meta tags are
+       advisory (real HTTP headers are stronger), but GitHub Pages doesn't let
+       us set headers, so they're our best option for layer 1. -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <title>Alternative — A field guide to the music beside the mainstream</title>
   <meta name="description" content="An interactive atlas of alternative music, from the Velvet Underground through punk, post-punk, college rock, grunge, and the branching sub-genres of today.">
 
@@ -12,13 +20,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css">
+  <!-- Cache-bust our own JS/CSS on every page load by stamping a timestamp
+       query string. Uses document.write so load order (data.js before app.js)
+       is preserved with no build step. -->
+  <script>
+    (function() {
+      var v = '?v=' + Date.now();
+      document.write(
+        '<link rel="stylesheet" href="styles.css' + v + '">' +
+        '<script src="data.js' + v + '"><\/script>' +
+        '<script src="app.js' + v + '"><\/script>'
+      );
+    })();
+  </script>
 </head>
 <body>
   <div id="app"></div>
-
-  <!-- data first, then app logic -->
-  <script src="data.js"></script>
-  <script src="app.js"></script>
 </body>
 </html>
