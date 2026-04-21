@@ -53,7 +53,7 @@ const findOffshoot = id => {
 // ═══════════════════════════════════════════════════════════
 
 const spotifySearchUrl    = q => `https://open.spotify.com/search/${encodeURIComponent(q)}`;
-const appleMusicSearchUrl = q => `https://music.apple.com/us/search?term=${encodeURIComponent(q)}`;
+const appleMusicSearchUrl = q => `https://music.apple.com/search?term=${encodeURIComponent(q)}`;
 
 function bandSpotify(band)    { return band.spotify    || spotifySearchUrl(band.name); }
 function bandApple(band)      { return band.appleMusic || appleMusicSearchUrl(band.name); }

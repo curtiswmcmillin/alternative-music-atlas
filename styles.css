@@ -815,6 +815,26 @@ button {
 @media (hover: none) {
   .nav-item:hover { padding-left: 0; }
   .nav-item.active:hover { padding-left: 1rem; }
+
+  /* Inflate music-link tap targets to ≥44px (Apple HIG) without
+     enlarging the icon. The wider gap prevents mis-taps between
+     adjacent Spotify/Apple buttons. */
+  .music-link {
+    width: 44px;
+    height: 44px;
+  }
+  .music-links {
+    gap: 0.5rem;
+  }
+  /* Suppress the hover-fill background on touch — it briefly flashes
+     a large circle on tap and looks heavy at the larger size. */
+  .music-link:hover {
+    background: transparent;
+    transform: none;
+  }
+  .music-link:active {
+    background: var(--paper-card);
+  }
 }
 
 /* ─── narrow-viewport type tightening ─── */
