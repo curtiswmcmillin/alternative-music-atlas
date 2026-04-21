@@ -126,7 +126,6 @@ Common next steps you might want to ask Claude Code to do:
 - **Add a band-detail view.** Right now clicking a band just shows its inline note. You could lift bands into their own top-level array with their own detail pages, and wire up a third view tab.
 - **Add filtering or search.** A small input above the nav that filters by name or by decade.
 - **Add a genealogy view.** Reuse the SVG tree structure from the original conversation as a third view mode — pan/zoom, click a node to jump to its detail.
-- **Persist selection in the URL.** Read/write `location.hash` so the view and selected item can be linked.
 - **Swap paper cream for something different.** All colors live in `:root` in `styles.css` — change the four or five CSS variables and the whole aesthetic shifts.
 
 ### Style / convention notes for Claude Code

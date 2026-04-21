@@ -267,29 +267,59 @@ function renderFooter() {
 }
 
 // ═══════════════════════════════════════════════════════════
+// ROUTING — the URL hash is the source of truth
+//
+//   #era/<id>   → eras view, that era selected
+//   #sg/<id>    → sub-genres view, that sub-genre selected
+//
+// Clicks don't mutate state directly; they write the hash, and
+// the hashchange listener re-reads it into state and renders.
+// Browser back/forward and shareable URLs come for free.
+// ═══════════════════════════════════════════════════════════
+
+function setHash(view, id) {
+  const prefix = view === "eras" ? "era" : "sg";
+  location.hash = `${prefix}/${encodeURIComponent(id)}`;
+}
+
+function applyHash() {
+  const [prefix, ...rest] = location.hash.replace(/^#/, "").split("/");
+  const id = decodeURIComponent(rest.join("/"));
+
+  if (prefix === "era" && findEra(id)) {
+    state.view = "eras";
+    state.selectedEraId = id;
+  } else if (prefix === "sg" && findSubGenre(id)) {
+    state.view = "subgenres";
+    state.selectedSubGenreId = id;
+  } else {
+    // hash empty or unknown — normalize; hashchange will re-enter
+    const fallbackId = state.view === "eras" ? state.selectedEraId : state.selectedSubGenreId;
+    setHash(state.view, fallbackId);
+    return;
+  }
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════
 // EVENT HANDLERS
 // ═══════════════════════════════════════════════════════════
 
 function attachHandlers() {
   document.querySelectorAll(".view-tab").forEach(el => {
     el.addEventListener("click", () => {
-      state.view = el.dataset.view;
-      render();
+      const view = el.dataset.view;
+      const id = view === "eras" ? state.selectedEraId : state.selectedSubGenreId;
+      setHash(view, id);
     });
   });
 
   document.querySelectorAll(".nav-item[data-era-id]").forEach(el => {
-    el.addEventListener("click", () => {
-      state.selectedEraId = el.dataset.eraId;
-      render();
-    });
+    el.addEventListener("click", () => setHash("eras", el.dataset.eraId));
   });
 
   document.querySelectorAll(".nav-item[data-sg-id]").forEach(el => {
-    el.addEventListener("click", () => {
-      state.selectedSubGenreId = el.dataset.sgId;
-      render();
-    });
+    el.addEventListener("click", () => setHash("subgenres", el.dataset.sgId));
   });
 }
 
@@ -297,4 +327,5 @@ function attachHandlers() {
 // GO
 // ═══════════════════════════════════════════════════════════
 
-render();
+window.addEventListener("hashchange", applyHash);
+applyHash();

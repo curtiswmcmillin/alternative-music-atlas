@@ -21,12 +21,12 @@ There are no tests, no linter, no typecheck. "Working" means `index.html` loads 
 
 The app is an interactive field guide to alternative music, rendered entirely from a single data object.
 
-**Data flow — one direction, rebuilt on every change:**
+**Data flow — URL hash drives state, state drives a full re-render:**
 
 1. `data.js` defines `window.MUSIC_DATA` — eras (top-level timeline) and `subGenreFamilies` (groups of sub-genres, each tied to a `parentEra`).
-2. `app.js` holds a single mutable `state` object (`view`, `selectedEraId`, `selectedSubGenreId`).
-3. `render()` wipes `#app` and rebuilds its `innerHTML` from `state` + `DATA` using template literals.
-4. `attachHandlers()` re-binds click listeners after every render. Any click that mutates `state` calls `render()` again.
+2. The **URL hash is the source of truth.** Formats: `#era/<id>` or `#sg/<id>`. On load and on every `hashchange`, `applyHash()` parses the hash into `state` and calls `render()`.
+3. **Clicks never mutate state directly** — they call `setHash(view, id)`, which updates `location.hash`, which fires `hashchange`, which re-enters `applyHash`. This indirection is what makes browser back/forward and shareable URLs free; preserve it when adding new interactions.
+4. `render()` wipes `#app` and rebuilds its `innerHTML` from `state` + `DATA` using template literals. `attachHandlers()` re-binds click listeners after every render.
 
 There is no diffing, no virtual DOM, no framework — just full re-render per interaction. Keep it that way. The atlas is small enough that this is fine and the zero-dependency property is the point.
 
