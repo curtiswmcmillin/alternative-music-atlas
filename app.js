@@ -48,23 +48,23 @@ const findOffshoot = id => {
 // ═══════════════════════════════════════════════════════════
 // MUSIC LINK HELPERS
 //
-// If a band/track has explicit spotify/appleMusic URLs we use them.
-// Otherwise we fall back to a Google search restricted to the relevant
-// service's domain.
+// If a band/track has explicit spotify/appleMusic/youtube URLs we
+// use them. Otherwise we fall back to a search URL.
 //
-// Why Google instead of the services' own /search URLs: on iOS, both
-// open.spotify.com and music.apple.com are Universal Link domains, so
-// iOS hands those URLs to the apps before the browser can navigate.
-// The apps' Universal Link handlers don't parse /search/<query> URLs,
-// so they just open to the home screen. Google search isn't a Universal
-// Link domain, so the results page renders normally — and the result
-// URLs ARE deep links (/track/<id>, /artist/<id>), which the apps DO
-// honor correctly when tapped.
+// Spotify and Apple Music both register their public domains as iOS
+// Universal Link providers, and their apps don't parse /search/<query>
+// URLs — tapping one just opens the app to a generic screen. So for
+// those two we route through Google, restricted by site: filter; the
+// result page contains real /track/<id> and /artist/<id> deep links
+// that the apps DO honor correctly when tapped.
+//
+// YouTube doesn't have this problem — its iOS app handles search URLs
+// natively — so we link straight to YouTube's results page.
 // ═══════════════════════════════════════════════════════════
 
 const spotifySearchUrl    = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:open.spotify.com")}`;
 const appleMusicSearchUrl = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:music.apple.com")}`;
-const youtubeSearchUrl    = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:youtube.com")}`;
+const youtubeSearchUrl    = q => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
 
 function bandSpotify(band)    { return band.spotify    || spotifySearchUrl(band.name); }
 function bandApple(band)      { return band.appleMusic || appleMusicSearchUrl(band.name); }
