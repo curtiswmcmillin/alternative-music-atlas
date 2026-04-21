@@ -19,6 +19,7 @@
 //   isTouchstone?: boolean   — marks an era-defining band (★)
 //   spotify?: string         — full URL (e.g., open.spotify.com/track/<id>); if omitted, app.js falls back to a Google search redirect
 //   appleMusic?: string      — full URL (e.g., music.apple.com/album/.../<id>?i=<trackid>); if omitted, app.js falls back to a Google search redirect
+//   youtube?: string         — full URL (e.g., youtube.com/watch?v=<id>); if omitted, app.js falls back to a Google search redirect
 //
 // SubGenre fields (basic):
 //   id, name, origin, summary, bands: [string]

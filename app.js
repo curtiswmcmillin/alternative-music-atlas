@@ -64,21 +64,26 @@ const findOffshoot = id => {
 
 const spotifySearchUrl    = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:open.spotify.com")}`;
 const appleMusicSearchUrl = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:music.apple.com")}`;
+const youtubeSearchUrl    = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:youtube.com")}`;
 
 function bandSpotify(band)    { return band.spotify    || spotifySearchUrl(band.name); }
 function bandApple(band)      { return band.appleMusic || appleMusicSearchUrl(band.name); }
+function bandYoutube(band)    { return band.youtube    || youtubeSearchUrl(band.name); }
 function trackSpotify(track)  { return track.spotify    || spotifySearchUrl(`${track.artist} ${track.title}`); }
 function trackApple(track)    { return track.appleMusic || appleMusicSearchUrl(`${track.artist} ${track.title}`); }
+function trackYoutube(track)  { return track.youtube    || youtubeSearchUrl(`${track.artist} ${track.title}`); }
 
 // Inline SVG icons — small, monochrome, recolored via currentColor.
 const SPOTIFY_ICON = `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.6 14.4a.7.7 0 0 1-1 .25c-2.6-1.6-5.9-1.95-9.7-1.05a.7.7 0 0 1-.3-1.4c4.2-1 7.85-.6 10.75 1.2a.7.7 0 0 1 .25 1Zm1.25-2.85a.85.85 0 0 1-1.2.3c-3-1.85-7.55-2.4-11.1-1.3a.85.85 0 0 1-.5-1.65c4.05-1.25 9.05-.65 12.5 1.45a.85.85 0 0 1 .3 1.2Zm.1-2.95C14.4 8.5 8.95 8.3 5.7 9.3A1 1 0 1 1 5.1 7.4c3.75-1.15 9.8-.9 13.7 1.4a1 1 0 1 1-1 1.8Z"/></svg>`;
 const APPLE_ICON = `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M16.5 0c.05 1.2-.45 2.4-1.2 3.25-.8.9-2.05 1.6-3.2 1.5-.1-1.15.5-2.35 1.2-3.1C14.15.7 15.4.05 16.5 0Zm3.95 17.4c-.55 1.25-.8 1.8-1.5 2.9-1 1.55-2.4 3.5-4.15 3.5-1.55.05-1.95-1-4.05-1-2.1.05-2.55 1.05-4.1 1-1.75-.05-3.05-1.85-4.05-3.4C-.55 17.05-.85 11.6 1.95 8.65c1.5-1.55 3.6-2.55 5.65-2.55 1.65 0 2.7 1 4.05 1 1.3 0 2.1-1 4-1 1.85-.05 3.8.95 5.05 2.6-4.45 2.4-3.7 8.65.75 8.7Z"/></svg>`;
+const YOUTUBE_ICON = `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1C4.4 20.4 12 20.4 12 20.4s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8ZM9.6 15.6V8.4l6.4 3.6-6.4 3.6Z"/></svg>`;
 
 function renderBandLinks(band) {
   return `
     <span class="music-links">
       <a class="music-link spotify" href="${esc(bandSpotify(band))}" target="_blank" rel="noopener noreferrer" aria-label="Listen to ${esc(band.name)} on Spotify" title="Spotify">${SPOTIFY_ICON}</a>
       <a class="music-link apple" href="${esc(bandApple(band))}" target="_blank" rel="noopener noreferrer" aria-label="Listen to ${esc(band.name)} on Apple Music" title="Apple Music">${APPLE_ICON}</a>
+      <a class="music-link youtube" href="${esc(bandYoutube(band))}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(band.name)} on YouTube" title="YouTube">${YOUTUBE_ICON}</a>
     </span>
   `;
 }
@@ -94,6 +99,7 @@ function renderSignatureTrack(track) {
         <span class="music-links">
           <a class="music-link spotify" href="${esc(trackSpotify(track))}" target="_blank" rel="noopener noreferrer" aria-label="Play ${esc(track.title)} on Spotify" title="Spotify">${SPOTIFY_ICON}</a>
           <a class="music-link apple" href="${esc(trackApple(track))}" target="_blank" rel="noopener noreferrer" aria-label="Play ${esc(track.title)} on Apple Music" title="Apple Music">${APPLE_ICON}</a>
+          <a class="music-link youtube" href="${esc(trackYoutube(track))}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(track.title)} on YouTube" title="YouTube">${YOUTUBE_ICON}</a>
         </span>
       </div>
     </aside>

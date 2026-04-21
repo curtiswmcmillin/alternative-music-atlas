@@ -635,6 +635,10 @@ button {
   color: var(--accent);
 }
 
+.music-link.youtube:hover {
+  color: #FF0000;
+}
+
 /* In offshoot grid the wave-band layout doesn't apply — keep links inline. */
 .wave-band .music-links {
   margin-left: 0;
