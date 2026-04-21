@@ -19,10 +19,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app"></div>
 
   <!-- Cache-bust our own JS/CSS on every page load by stamping a timestamp
-       query string. Uses document.write so load order (data.js before app.js)
-       is preserved with no build step. -->
+       query string. Script lives at the end of <body> so #app exists in the
+       DOM before app.js runs, and document.write inserts the tags in order
+       (data.js before app.js) with no build step. -->
   <script>
     (function() {
       var v = '?v=' + Date.now();
@@ -33,8 +37,5 @@
       );
     })();
   </script>
-</head>
-<body>
-  <div id="app"></div>
 </body>
 </html>
