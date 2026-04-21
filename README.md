@@ -27,6 +27,10 @@ alternative-music-atlas/
 
 Everything is driven by `data.js`. Change the data, reload the page, the UI updates.
 
+## Deployment
+
+Hosted on GitHub Pages from the `main` branch root. Live at [curtiswmcmillin.github.io/alternative-music-atlas](https://curtiswmcmillin.github.io/alternative-music-atlas/). Pushing to `main` redeploys automatically.
+
 ## Data schema
 
 ### Eras
