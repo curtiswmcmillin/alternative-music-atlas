@@ -488,7 +488,7 @@ button {
 
 .wave-band {
   display: grid;
-  grid-template-columns: minmax(160px, 220px) 1fr;
+  grid-template-columns: minmax(160px, 220px) 1fr auto;
   gap: 1.5rem;
   align-items: baseline;
   padding: 0.9rem 0;
@@ -531,6 +531,32 @@ button {
   border-radius: 2px;
 }
 
+/* Clickable variant — used when offshoots are first-class navigable nodes. */
+.offshoot-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.offshoot-link:hover {
+  background: var(--paper-card);
+  transform: translateX(2px);
+}
+
+.offshoot-cta {
+  display: block;
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
 .offshoot-name {
   font-family: var(--font-display);
   font-size: 1.3rem;
@@ -550,6 +576,125 @@ button {
   font-size: 0.75rem;
   color: var(--ink-muted);
   letter-spacing: 0.03em;
+}
+
+/* Offshoot detail page — the "branched off from" link back to parent sub-genre. */
+.offshoot-back-note {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--hairline);
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink-muted);
+  font-size: 1rem;
+}
+
+.detail-link {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.detail-link:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* ─── music links (Spotify / Apple Music) ─── */
+
+.music-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+.music-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: var(--ink-subtle);
+  background: transparent;
+  text-decoration: none;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.music-link:hover {
+  background: var(--paper-card);
+  transform: scale(1.05);
+}
+
+.music-link.spotify:hover {
+  color: #1DB954;
+}
+
+.music-link.apple:hover {
+  color: var(--accent);
+}
+
+/* In offshoot grid the wave-band layout doesn't apply — keep links inline. */
+.wave-band .music-links {
+  margin-left: 0;
+}
+
+@media (max-width: 640px) {
+  .wave-band .music-links {
+    margin-top: 0.25rem;
+  }
+}
+
+/* ─── signature track block ─── */
+
+.signature-track {
+  margin-top: 1.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--paper-card);
+  border-left: 2px solid var(--accent);
+  border-radius: 2px;
+  max-width: 38em;
+}
+
+.signature-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.signature-body {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.signature-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+
+.signature-artist {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink-muted);
+  font-size: 1rem;
+}
+
+.signature-artist::before {
+  content: "— ";
+}
+
+.signature-track .music-links {
+  margin-left: auto;
 }
 
 .epilogue {
