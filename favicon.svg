@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg { fill: #f4ede0; }
+    .mark { fill: #8c1e1e; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #17120e; }
+      .mark { fill: #a93333; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32"/>
+  <text class="mark" x="16" y="25" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="28" font-style="italic">a</text>
+</svg>
