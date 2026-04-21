@@ -13,6 +13,7 @@ const DATA = window.MUSIC_DATA;
 
 const state = {
   view: "eras",                 // "eras" | "subgenres"
+  route: "list",                // "list" | "detail" — mobile shows one at a time
   selectedEraId: DATA.eras[0].id,
   selectedSubGenreId: DATA.subGenreFamilies[0].subGenres[0].id
 };
@@ -40,7 +41,7 @@ const findSubGenre  = id => {
 function render() {
   const app = document.getElementById("app");
   app.innerHTML = `
-    <div class="app">
+    <div class="app" data-route="${state.route}" data-view="${state.view}">
       ${renderHeader()}
       <main class="main">
         ${renderNav()}
@@ -50,6 +51,16 @@ function render() {
     </div>
   `;
   attachHandlers();
+  window.scrollTo(0, 0);
+}
+
+// Shown only on mobile when viewing a detail; returns to the list.
+// Native <a href="#..."> — the browser changes location.hash, hashchange
+// fires, applyHash re-renders as the list.
+function renderBackLink() {
+  const prefix = state.view === "eras" ? "era" : "sg";
+  const label = state.view === "eras" ? "All eras" : "All sub-genres";
+  return `<a class="back-link" href="#${prefix}">← ${esc(label)}</a>`;
 }
 
 // ─── header ───
@@ -131,6 +142,7 @@ function renderEraDetail() {
 
   return `
     <section class="detail" role="tabpanel">
+      ${renderBackLink()}
       <span class="detail-numeral">${esc(era.number)}</span>
       <header class="detail-header">
         <div class="detail-meta">
@@ -173,6 +185,7 @@ function renderSubGenreDetail() {
 
   return `
     <section class="detail" role="tabpanel">
+      ${renderBackLink()}
       <span class="detail-numeral">${esc(familyInitial)}</span>
       <header class="detail-header">
         <div class="detail-meta">
@@ -269,8 +282,10 @@ function renderFooter() {
 // ═══════════════════════════════════════════════════════════
 // ROUTING — the URL hash is the source of truth
 //
-//   #era/<id>   → eras view, that era selected
-//   #sg/<id>    → sub-genres view, that sub-genre selected
+//   #era          → eras list   (mobile: full-screen; desktop: nav + default detail)
+//   #era/<id>     → era detail  (mobile: full-screen; desktop: nav + that detail)
+//   #sg           → sub-genres list
+//   #sg/<id>      → sub-genre detail
 //
 // Clicks don't mutate state directly; they write the hash, and
 // the hashchange listener re-reads it into state and renders.
@@ -279,24 +294,33 @@ function renderFooter() {
 
 function setHash(view, id) {
   const prefix = view === "eras" ? "era" : "sg";
-  location.hash = `${prefix}/${encodeURIComponent(id)}`;
+  location.hash = id ? `${prefix}/${encodeURIComponent(id)}` : prefix;
 }
 
 function applyHash() {
   const [prefix, ...rest] = location.hash.replace(/^#/, "").split("/");
   const id = decodeURIComponent(rest.join("/"));
 
-  if (prefix === "era" && findEra(id)) {
-    state.view = "eras";
-    state.selectedEraId = id;
-  } else if (prefix === "sg" && findSubGenre(id)) {
-    state.view = "subgenres";
-    state.selectedSubGenreId = id;
-  } else {
-    // hash empty or unknown — normalize; hashchange will re-enter
-    const fallbackId = state.view === "eras" ? state.selectedEraId : state.selectedSubGenreId;
-    setHash(state.view, fallbackId);
+  const view = prefix === "era" ? "eras" : prefix === "sg" ? "subgenres" : null;
+
+  if (!view) {
+    setHash("eras");  // empty or unknown — normalize; hashchange re-enters
     return;
+  }
+
+  state.view = view;
+
+  if (id) {
+    const found = view === "eras" ? findEra(id) : findSubGenre(id);
+    if (found) {
+      if (view === "eras") state.selectedEraId = id;
+      else state.selectedSubGenreId = id;
+      state.route = "detail";
+    } else {
+      state.route = "list";  // id not found — just show the list
+    }
+  } else {
+    state.route = "list";
   }
   render();
 }
@@ -306,12 +330,10 @@ function applyHash() {
 // ═══════════════════════════════════════════════════════════
 
 function attachHandlers() {
+  // View tabs go to the list of that view (not the last-selected detail) —
+  // tapping a top-level tab means "take me to that section's index."
   document.querySelectorAll(".view-tab").forEach(el => {
-    el.addEventListener("click", () => {
-      const view = el.dataset.view;
-      const id = view === "eras" ? state.selectedEraId : state.selectedSubGenreId;
-      setHash(view, id);
-    });
+    el.addEventListener("click", () => setHash(el.dataset.view));
   });
 
   document.querySelectorAll(".nav-item[data-era-id]").forEach(el => {
@@ -321,6 +343,9 @@ function attachHandlers() {
   document.querySelectorAll(".nav-item[data-sg-id]").forEach(el => {
     el.addEventListener("click", () => setHash("subgenres", el.dataset.sgId));
   });
+
+  // Back link is a native <a href="#era|#sg"> — no handler needed;
+  // the browser updates the hash and hashchange re-renders.
 }
 
 // ═══════════════════════════════════════════════════════════

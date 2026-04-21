@@ -617,3 +617,65 @@ button {
   color: var(--ink-subtle);
   text-transform: uppercase;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   mobile list/detail paradigm
+   Desktop keeps both panels side-by-side regardless of route.
+   Below 900px we show one panel at a time — list or detail —
+   driven by data-route on .app, written by applyHash() in app.js.
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .app[data-route="list"] .detail { display: none; }
+  .app[data-route="detail"] .nav { display: none; }
+  .app[data-route="detail"] .main { gap: 0; }
+}
+
+/* ─── back link (mobile detail only) ─── */
+
+.back-link {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .app[data-route="detail"] .back-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 0.5rem 0 1.5rem;
+    transition: color 0.2s ease;
+  }
+  .app[data-route="detail"] .back-link:active {
+    color: var(--accent);
+  }
+}
+
+/* ─── touch polish ─── */
+
+.nav-item:active {
+  background: var(--paper-alt);
+}
+
+.view-tab:active {
+  color: var(--accent);
+}
+
+/* Desktop hover slide doesn't belong on touch — it sticks after tap
+   until the next tap elsewhere. Neutralize it for no-hover devices. */
+@media (hover: none) {
+  .nav-item:hover { padding-left: 0; }
+  .nav-item.active:hover { padding-left: 1rem; }
+}
+
+/* ─── narrow-viewport type tightening ─── */
+
+@media (max-width: 600px) {
+  .detail-numeral {
+    font-size: clamp(4.5rem, 16vw, 7rem);
+  }
+}

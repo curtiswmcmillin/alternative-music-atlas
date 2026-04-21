@@ -24,9 +24,17 @@ The app is an interactive field guide to alternative music, rendered entirely fr
 **Data flow — URL hash drives state, state drives a full re-render:**
 
 1. `data.js` defines `window.MUSIC_DATA` — eras (top-level timeline) and `subGenreFamilies` (groups of sub-genres, each tied to a `parentEra`).
-2. The **URL hash is the source of truth.** Formats: `#era/<id>` or `#sg/<id>`. On load and on every `hashchange`, `applyHash()` parses the hash into `state` and calls `render()`.
-3. **Clicks never mutate state directly** — they call `setHash(view, id)`, which updates `location.hash`, which fires `hashchange`, which re-enters `applyHash`. This indirection is what makes browser back/forward and shareable URLs free; preserve it when adding new interactions.
-4. `render()` wipes `#app` and rebuilds its `innerHTML` from `state` + `DATA` using template literals. `attachHandlers()` re-binds click listeners after every render.
+2. The **URL hash is the source of truth.** Four shapes:
+   - `#era` — eras list
+   - `#era/<id>` — era detail
+   - `#sg` — sub-genres list
+   - `#sg/<id>` — sub-genre detail
+
+   On load and on every `hashchange`, `applyHash()` parses the hash into `state` (including `state.route = "list" | "detail"`) and calls `render()`.
+3. **Clicks never mutate state directly** — they call `setHash(view, id?)`, which updates `location.hash`, which fires `hashchange`, which re-enters `applyHash`. Browser back/forward and shareable URLs come for free. Preserve the indirection when adding new interactions.
+4. `render()` wipes `#app` and rebuilds its `innerHTML` from `state` + `DATA` using template literals, stamping `data-route` and `data-view` on the `.app` div. `attachHandlers()` re-binds click listeners after every render.
+
+**Mobile list/detail paradigm.** Desktop shows both nav and detail panels side-by-side regardless of route. Below 900px, CSS reads `data-route` and shows only the nav (route=list) or only the detail (route=detail). A `.back-link` (native `<a href="#era">` — no JS handler) appears only on mobile in detail mode. View tabs go to the list of that view, not the last-visited detail — tapping a top-level tab means "take me to that section's index."
 
 There is no diffing, no virtual DOM, no framework — just full re-render per interaction. Keep it that way. The atlas is small enough that this is fine and the zero-dependency property is the point.
 
