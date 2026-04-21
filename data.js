@@ -17,8 +17,8 @@
 // Band fields:
 //   name, years, location, note
 //   isTouchstone?: boolean   — marks an era-defining band (★)
-//   spotify?: string         — full URL; if omitted, app.js falls back to a search URL
-//   appleMusic?: string      — full URL; if omitted, app.js falls back to a search URL
+//   spotify?: string         — full URL (e.g., open.spotify.com/track/<id>); if omitted, app.js falls back to a Google search redirect
+//   appleMusic?: string      — full URL (e.g., music.apple.com/album/.../<id>?i=<trackid>); if omitted, app.js falls back to a Google search redirect
 //
 // SubGenre fields (basic):
 //   id, name, origin, summary, bands: [string]

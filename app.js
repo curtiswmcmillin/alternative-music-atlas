@@ -47,13 +47,23 @@ const findOffshoot = id => {
 
 // ═══════════════════════════════════════════════════════════
 // MUSIC LINK HELPERS
-// Spotify and Apple Music both have search-URL patterns that
-// always resolve. If a band/track has explicit URLs we use them;
-// otherwise we synthesize a search URL from name/title/artist.
+//
+// If a band/track has explicit spotify/appleMusic URLs we use them.
+// Otherwise we fall back to a Google search restricted to the relevant
+// service's domain.
+//
+// Why Google instead of the services' own /search URLs: on iOS, both
+// open.spotify.com and music.apple.com are Universal Link domains, so
+// iOS hands those URLs to the apps before the browser can navigate.
+// The apps' Universal Link handlers don't parse /search/<query> URLs,
+// so they just open to the home screen. Google search isn't a Universal
+// Link domain, so the results page renders normally — and the result
+// URLs ARE deep links (/track/<id>, /artist/<id>), which the apps DO
+// honor correctly when tapped.
 // ═══════════════════════════════════════════════════════════
 
-const spotifySearchUrl    = q => `https://open.spotify.com/search/${encodeURIComponent(q)}`;
-const appleMusicSearchUrl = q => `https://music.apple.com/search?term=${encodeURIComponent(q)}`;
+const spotifySearchUrl    = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:open.spotify.com")}`;
+const appleMusicSearchUrl = q => `https://www.google.com/search?q=${encodeURIComponent(q + " site:music.apple.com")}`;
 
 function bandSpotify(band)    { return band.spotify    || spotifySearchUrl(band.name); }
 function bandApple(band)      { return band.appleMusic || appleMusicSearchUrl(band.name); }
